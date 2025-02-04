@@ -9,18 +9,18 @@
     </div>
 </template>
 
-<script> 
+<script>
 import { useActivityStore } from '../store/activities'
 import { onMounted } from 'vue'
 
-export default { 
-    setup() { 
-        const store = useActivityStore()
-        onMounted(() => { 
-            store.fetchActivites()
-        })
+export default {
+    setup() {
+        const store = useActivityStore();
+        onMounted(() => {
+            store.fetchActivities(); 
+        });
 
-        return { activites: store.activites }
+        return { activities: store.activities }; 
     },
 }
 </script>
