@@ -22,6 +22,10 @@ export const useActivityStore = defineStore('activities', {
                 console.error("Failed to fetch activities", error);
             }
         }, 
-    },
-    persist: true // Enable persistence
-});
+
+        // Reset function to clear activities on logout
+        $reset() {
+            this.activities = [];
+        }
+    }, 
+})

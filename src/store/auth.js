@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { useActivityStore } from './activities'
 import axios from 'axios';
 
 export const useAuthStore = defineStore('auth', {

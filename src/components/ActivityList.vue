@@ -2,45 +2,60 @@
     <div> 
         <h2>Your Activities</h2>
         <ul> 
-            <li v-for="activity in activities" :key="activity.id"> 
-                {{ activity.name }} - {{ formatDistance(activity) }}
+            <li 
+                v-for="activity in activities" 
+                :key="activity.id" 
+                @click="selectActivity(activity)"
+                class="activity-item"
+            > 
+                {{ activity.name }} - {{ (activity.distance).toFixed(2) }} m
             </li>
         </ul>
+
+        <!-- Show overlay when an activity is selected -->
+        <Overlay v-if="selectedActivity" :activity="selectedActivity" />
     </div>
 </template>
 
 <script>
 import { useActivityStore } from '../store/activities'
-import { onMounted, computed } from 'vue'  
+import { onMounted, computed, ref } from 'vue'  
+import Overlay from './Overlay.vue' 
 
 export default {
+    components: { Overlay },
+
     setup() {
         const store = useActivityStore();
+        const selectedActivity = ref(null); // Reactive state for selected activity
 
         onMounted(() => {
             store.fetchActivities(); 
         });
 
-        // Function to format distance based on activity type
-        const formatDistance = (activity) => {
-            if (!activity.distance) return "0"; 
-
-            // Handle different activity types based on Strava's classification
-            const type = activity.sport_type || activity.type; // Strava API may use "sport_type" or "type"
-
-            if (["Run", "Ride", "Walk", "Hike"].includes(type)) {
-                return `${(activity.distance / 1000).toFixed(2)} km`; // Convert meters to km
-            } else if (["Swim", "Rowing"].includes(type)) {
-                return `${activity.distance.toFixed(0)} m`; // Keep meters
-            } else {
-                return `${(activity.distance / 1000).toFixed(2)} km`; // Default to km
-            }
+        // Function to update selected activity
+        const selectActivity = (activity) => {
+            console.log("Selected Activity:", activity); // Debugging log
+            selectedActivity.value = activity;
         };
 
         return { 
-            activities: computed(() => store.activities), 
-            formatDistance
+            activities: computed(() => store.activities),
+            selectedActivity,
+            selectActivity
         }; 
     },
 }
 </script>
+
+<style>
+/* Style to indicate clickability */
+.activity-item {
+    cursor: pointer;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+.activity-item:hover {
+    background-color: #f0f0f0;
+}
+</style>
