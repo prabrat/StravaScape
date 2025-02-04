@@ -1,9 +1,9 @@
 <template> 
     <div> 
-        <h2>Your Activites</h2>
+        <h2>Your Activities</h2>
         <ul> 
             <li v-for="activity in activities" :key="activity.id"> 
-                {{  activity.name }} - {{ (activity.distance / 1000).toFixed(2) }} km 
+                {{ activity.name }} - {{ formatDistance(activity) }}
             </li>
         </ul>
     </div>
@@ -11,19 +11,36 @@
 
 <script>
 import { useActivityStore } from '../store/activities'
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'  
 
 export default {
     setup() {
         const store = useActivityStore();
+
         onMounted(() => {
             store.fetchActivities(); 
-            console.log("Updated activites:", store.activites)
         });
 
-        const activities = computed(() => store.activities)
+        // Function to format distance based on activity type
+        const formatDistance = (activity) => {
+            if (!activity.distance) return "0"; 
 
-        return { activities }; 
+            // Handle different activity types based on Strava's classification
+            const type = activity.sport_type || activity.type; // Strava API may use "sport_type" or "type"
+
+            if (["Run", "Ride", "Walk", "Hike"].includes(type)) {
+                return `${(activity.distance / 1000).toFixed(2)} km`; // Convert meters to km
+            } else if (["Swim", "Rowing"].includes(type)) {
+                return `${activity.distance.toFixed(0)} m`; // Keep meters
+            } else {
+                return `${(activity.distance / 1000).toFixed(2)} km`; // Default to km
+            }
+        };
+
+        return { 
+            activities: computed(() => store.activities), 
+            formatDistance
+        }; 
     },
 }
 </script>
