@@ -9,17 +9,19 @@ export const useActivityStore = defineStore('activities', {
 
     actions: { 
         async fetchActivities() { 
-            const authStore = useAuthStore()
-            if (!authStore.accessToken) return 
+            const authStore = useAuthStore();
+            if (!authStore.accessToken) return;
 
             try { 
                 const response = await axios.get('https://www.strava.com/api/v3/athlete/activities', { 
-                    headers: { Authorization: 'Bearer ${authStore.accessToken' }, 
+                    headers: { Authorization: `Bearer ${authStore.accessToken}` }, 
                 }); 
-                this.activities = response.data
+                console.log("Fetched Activities:", response.data);
+                this.activities = response.data;
             } catch (error) { 
-                console.error("Failed to fetch activites", error)
+                console.error("Failed to fetch activities", error);
             }
         }, 
-    }, 
-})
+    },
+    persist: true // Enable persistence
+});

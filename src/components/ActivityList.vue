@@ -18,9 +18,12 @@ export default {
         const store = useActivityStore();
         onMounted(() => {
             store.fetchActivities(); 
+            console.log("Updated activites:", store.activites)
         });
 
-        return { activities: store.activities }; 
+        const activities = computed(() => store.activities)
+
+        return { activities }; 
     },
 }
 </script>
