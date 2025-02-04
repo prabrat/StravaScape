@@ -1,0 +1,25 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  
+  h1, h2 {
+    color: #fc5200;
+  }
+  
+  button {
+    padding: 10px;
+    background-color: #fc5200;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .overlay {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 20px;
+  }
+  
